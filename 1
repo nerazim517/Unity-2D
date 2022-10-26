@@ -1,1 +1,138 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+public class Game1EventSystem : MonoBehaviour
+{
+    public GameObject DestroyExp;
+    public GameObject Destroybullet;
+    public GameObject UpgradeInterface;
+    public GameObject DefeatInterface;
+    public GameObject VictoryInterface;
+    public GameObject PauseInterface;
+    public GameObject BackButton;
+    public GameObject Text_Exp;
+    public GameObject Text_Time;
+    public GameObject Text_Level;
+    public GameObject Text_Killed;
+    public GameObject Text_HP;
+    public static bool KillBoss2;
+    int Now_level = 1;
+    float start_time;
+    void Start()
+    {
+        KillBoss2 = false;
+        start_time = Time.time;
+        UpgradeInterface.SetActive(false);
+        DefeatInterface.SetActive(false);
+        VictoryInterface.SetActive(false);
+        PauseInterface.SetActive(false);
+        PlayerControl.EXP = 0;
+        PlayerControl.Level = 1;
+        PlayerControl.Money = 0;
+        PlayerControl.HP = 1000;
+        PlayerControl.KilledNumber = 0;
+        Destroy(DestroyExp);
+        Destroy(Destroybullet);
+    }
+    void Update()
+    {
+        if(PlayerControl.Level!=Now_level)
+        {
+            Time.timeScale = 0;
+            UI_Down();
+            Now_level = PlayerControl.Level;
+            UpgradeInterface.SetActive(true);
+            UpGradeChangeIcon.UpGradeTableOn = true;
+        }
+        if(PlayerControl.HP<=0)
+        {
+            Time.timeScale = 0;
+            DefeatInterface.SetActive(true);
+            UI_Down();
+            UpGradeChangeIcon.UpGradeTableOn = true;
+        }
+        if(PlayerControl.Level>=15)
+        {
+            UpgradeInterface.SetActive(false);
+            Time.timeScale = 0;
+            VictoryInterface.SetActive(true);
+            UI_Down();
+            UpGradeChangeIcon.UpGradeTableOn = true;
+        }
+        if(Time.time-start_time>=600)
+        {
+            Time.timeScale = 0;
+            VictoryInterface.SetActive(true);
+            UI_Down();
+            UpGradeChangeIcon.UpGradeTableOn = true;
+        }
+        if(KillBoss2)
+        {
+            Time.timeScale = 0;
+            VictoryInterface.SetActive(true);
+            UI_Down();
+            UpGradeChangeIcon.UpGradeTableOn = true;
+        }
+    }
+    void UI_Down()
+    {
+        BackButton.SetActive(false);
+        Text_Exp.SetActive(false);
+        Text_Time.SetActive(false);
+        Text_Level.SetActive(false);
+        Text_Killed.SetActive(false);
+        Text_HP.SetActive(false);
+    }
+    void UI_UP()
+    {
+        BackButton.SetActive(true);
+        Text_Exp.SetActive(true);
+        Text_Time.SetActive(true);
+        Text_Level.SetActive(true);
+        Text_Killed.SetActive(true);
+        Text_HP.SetActive(true);
+    }
+    public void GoToHall()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Hall");
+    }
+    public void Resume()
+    {
+        Time.timeScale = 1f;
+        UpGradeChangeIcon.UpGradeTableOn = false;
+        PauseInterface.SetActive(false);
+        UpgradeInterface.SetActive(false);
+        UI_UP();
+    }
+    public void Pause()
+    {
+        Time.timeScale = 0;
+        UI_Down();
+        PauseInterface.SetActive(true);
+        UpGradeChangeIcon.UpGradeTableOn = true;
+    }
+    public void Icon1UpGrade()
+    {
+        UpGradeChangeIcon.WeaponLevel[UpGradeChangeIcon.Index[0]]++;
+        UpGradeChangeIcon.UpGradeTableOn = false;
+        Resume();
+        UI_UP();
+    }
+    public void Icon2UpGrade()
+    {
+        UpGradeChangeIcon.WeaponLevel[UpGradeChangeIcon.Index[1]]++;
+        UpGradeChangeIcon.UpGradeTableOn = false;
+        Resume();
+        UI_UP();
+    }
+    public void Icon3UpGrade()
+    {
+        UpGradeChangeIcon.WeaponLevel[UpGradeChangeIcon.Index[2]]++;
+        UpGradeChangeIcon.UpGradeTableOn = false;
+        Resume();
+        UI_UP();
+    }
+}
 
